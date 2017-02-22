@@ -1,1 +1,107 @@
-AWK Command
+root@ubuntu:~# cat employee.txt
+100  Thomas  Manager    Sales       $5,000
+200  Jason   Developer  Technology  $5,500
+300  Sanjay  Sysadmin   Technology  $7,000
+400  Nisha   Manager    Marketing   $9,500
+500  Randy   DBA        Technology  $6,000
+=====================================================
+Print the whole content of the file
+root@ubuntu:~# awk '{print;}' employee.txt
+100  Thomas  Manager    Sales       $5,000
+200  Jason   Developer  Technology  $5,500
+300  Sanjay  Sysadmin   Technology  $7,000
+400  Nisha   Manager    Marketing   $9,500
+500  Randy   DBA        Technology  $6,000
+=====================================================
+root@ubuntu:~# awk '{print $1}' employee.txt
+100
+200
+300
+400
+500
+====================================================
+root@ubuntu:~# awk '{print $5}' employee.txt
+$5,000
+$5,500
+$7,000
+$9,500
+$6,000
+=======================================================
+root@ubuntu:~# awk '/Thomas/
+> /Nisha/' employee.txt
+100  Thomas  Manager    Sales       $5,000
+400  Nisha   Manager    Marketing   $9,500
+======================================================
+root@ubuntu:~# awk '{print $2,$4}' employee.txt
+Thomas Sales
+Jason Technology
+Sanjay Technology
+Nisha Marketing
+Randy Technology
+=======================================================
+root@ubuntu:~# awk '{print $1,$NF}' employee.txt
+100 $5,000
+200 $5,500
+300 $7,000
+400 $9,500
+500 $6,000
+=======================================================
+root@ubuntu:~# awk 'NR==4' employee.txt
+400  Nisha   Manager    Marketing   $9,500
+=========================================================
+root@ubuntu:~# awk 'BEGIN{min=2;max=5}
+> {
+>  if (NR>=min)
+> {
+> if(NR<=max)
+> print
+> }
+> }' employee.txt
+200  Jason   Developer  Technology  $5,500
+300  Sanjay  Sysadmin   Technology  $7,000
+400  Nisha   Manager    Marketing   $9,500
+500  Randy   DBA        Technology  $6,000
+==========================================================
+root@ubuntu:~# awk 'NR>=3&&NR<=5' employee.txt
+300  Sanjay  Sysadmin   Technology  $7,000
+400  Nisha   Manager    Marketing   $9,500
+500  Randy   DBA        Technology  $6,000
+============================================================
+root@ubuntu:~# awk 'NR==2 || NR==4' employee.txt
+200  Jason   Developer  Technology  $5,500
+400  Nisha   Manager    Marketing   $9,500
+=========================================================
+root@ubuntu:~# awk '$1<300' employee.txt
+100  Thomas  Manager    Sales       $5,000
+200  Jason   Developer  Technology  $5,500
+========================================================
+root@ubuntu:~# awk '$1>400' employee.txt
+500  Randy   DBA        Technology  $6,000
+========================================================
+root@ubuntu:~# awk '
+BEGIN { count=0}
+
+/Nisha/ {
+list[count]=NR
+counter++
+}
+
+END {
+print "Total of:" count " rows."
+for (i in list) {
+print "Row: " list[i] ## Here, also print the actual row with linenr:list[i].
+}
+}
+' employee.txt
+o/p:-
+Total of:0 rows.
+Row: 4
+==========================================================================================
+root@ubuntu:~# awk '$3 ~/DBA/' employee.txt
+500  Randy   DBA        Technology  $6,000
+============================================================================
+root@ubuntu:~# awk 'BEGIN { count=0;}
+$3 ~ /Manager/ { count++; }
+END { print "Number of employees in Technology Dept =",count;}' employee.txt
+Number of employees in Technology Dept = 2
+======================================================================================
